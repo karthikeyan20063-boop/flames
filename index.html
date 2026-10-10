@@ -1,0 +1,411 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FLAMES | Love Calculator</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: white;
+    background:
+        radial-gradient(ellipse at top, #39143e 0%, transparent 50%),
+        linear-gradient(135deg, #090912, #160c20, #080812);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 25px;
+    overflow-x: hidden;
+}
+
+.heart {
+    position: fixed;
+    bottom: -40px;
+    color: #ff4e91;
+    opacity: 0;
+    pointer-events: none;
+    animation: floatUp 7s linear infinite;
+}
+
+@keyframes floatUp {
+    0% { transform: translateY(0) rotate(0); opacity: 0; }
+    15% { opacity: .55; }
+    85% { opacity: .4; }
+    100% { transform: translateY(-110vh) rotate(35deg); opacity: 0; }
+}
+
+.container {
+    width: 100%;
+    max-width: 470px;
+    padding: 36px 28px;
+    text-align: center;
+    border: 1px solid rgba(255, 111, 176, .25);
+    border-radius: 25px;
+    background: rgba(22, 16, 34, .88);
+    box-shadow: 0 0 60px rgba(221, 39, 122, .12);
+    backdrop-filter: blur(18px);
+    position: relative;
+    z-index: 2;
+}
+
+.logo {
+    font-size: 43px;
+    font-weight: 900;
+    letter-spacing: 7px;
+    background: linear-gradient(90deg, #ff70ac, #d6a5ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.subtitle {
+    color: #bcb0cc;
+    margin: 10px 0 28px;
+    font-size: 14px;
+}
+
+.heart-icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    50% { transform: scale(1.18); }
+}
+
+.field {
+    text-align: left;
+    margin-bottom: 18px;
+}
+
+label {
+    display: block;
+    color: #e8dcec;
+    font-size: 13px;
+    margin-bottom: 9px;
+}
+
+input {
+    width: 100%;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid #44304f;
+    background: #100d1b;
+    color: white;
+    outline: none;
+    font-size: 15px;
+    transition: .3s;
+}
+
+input:focus {
+    border-color: #ff65a5;
+    box-shadow: 0 0 15px #ff4e9125;
+}
+
+button {
+    width: 100%;
+    border: none;
+    padding: 15px;
+    border-radius: 12px;
+    background: linear-gradient(100deg, #e82e79, #a847df);
+    color: white;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .3s;
+    margin-top: 5px;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px #d62c8240;
+}
+
+button:active {
+    transform: scale(.98);
+}
+
+.flames-letters {
+    display: flex;
+    justify-content: center;
+    gap: 9px;
+    margin: 27px 0 10px;
+}
+
+.letter {
+    width: 43px;
+    height: 43px;
+    display: grid;
+    place-items: center;
+    border-radius: 11px;
+    background: #292038;
+    color: #ff8bbc;
+    font-size: 19px;
+    font-weight: 800;
+    border: 1px solid #49304f;
+}
+
+.letter.active {
+    background: #e93683;
+    color: white;
+    box-shadow: 0 0 18px #e9368370;
+}
+
+.legend {
+    font-size: 11px;
+    color: #a99bb8;
+    line-height: 2;
+}
+
+#result {
+    display: none;
+    margin-top: 24px;
+    padding: 22px 15px;
+    border-radius: 16px;
+    background: #25162f;
+    border: 1px solid #643052;
+    animation: appear .5s ease;
+}
+
+@keyframes appear {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.result-emoji {
+    font-size: 42px;
+}
+
+.result-title {
+    font-size: 26px;
+    color: #ff81b5;
+    margin: 10px 0;
+}
+
+.result-description {
+    color: #d0c1dc;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.reset {
+    background: transparent;
+    border: 1px solid #59405f;
+    margin-top: 12px;
+}
+
+.footer {
+    color: #85788f;
+    font-size: 11px;
+    margin-top: 23px;
+}
+
+@media (max-width: 400px) {
+    .container { padding: 28px 19px; }
+    .logo { font-size: 36px; }
+    .letter { width: 38px; height: 38px; }
+    .flames-letters { gap: 6px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="heart-icon">💗</div>
+    <div class="logo">FLAMES</div>
+    <p class="subtitle">
+        Two names. One fun little prediction. ✨
+    </p>
+
+    <form id="flamesForm">
+        <div class="field">
+            <label for="yourName">YOUR NAME</label>
+            <input id="yourName" type="text"
+                placeholder="Enter your name"
+                maxlength="40" autocomplete="off" required>
+        </div>
+
+        <div class="field">
+            <label for="theirName">THEIR NAME</label>
+            <input id="theirName" type="text"
+                placeholder="Enter their name"
+                maxlength="40" autocomplete="off" required>
+        </div>
+
+        <button type="submit">♥ &nbsp; Discover Your FLAMES</button>
+    </form>
+
+    <div class="flames-letters" id="letters">
+        <div class="letter" data-letter="F">F</div>
+        <div class="letter" data-letter="L">L</div>
+        <div class="letter" data-letter="A">A</div>
+        <div class="letter" data-letter="M">M</div>
+        <div class="letter" data-letter="E">E</div>
+        <div class="letter" data-letter="S">S</div>
+    </div>
+
+    <p class="legend">
+        F – Friends &nbsp; L – Love &nbsp; A – Affection<br>
+        M – Marriage &nbsp; E – Enemies &nbsp; S – Siblings
+    </p>
+
+    <section id="result" aria-live="polite">
+        <div class="result-emoji" id="resultEmoji"></div>
+        <h2 class="result-title" id="resultTitle"></h2>
+        <p class="result-description" id="resultDescription"></p>
+        <button class="reset" id="resetButton" type="button">
+            ↻ Try Another Pair
+        </button>
+    </section>
+
+    <p class="footer">
+        Made with ♥ for fun · Developed by Karthikeyan
+    </p>
+</div>
+
+<script>
+// Floating heart animation
+for (let i = 0; i < 15; i++) {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.textContent = Math.random() > 0.5 ? "♥" : "♡";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.animationDelay = Math.random() * 7 + "s";
+    heart.style.animationDuration = (5 + Math.random() * 5) + "s";
+    heart.style.fontSize = (14 + Math.random() * 22) + "px";
+    document.body.appendChild(heart);
+}
+
+const outcomes = {
+    F: {
+        title: "Friends",
+        emoji: "🤝",
+        description: "A fun prediction of friendship! Every great bond can start with a simple hello."
+    },
+    L: {
+        title: "Love",
+        emoji: "💖",
+        description: "The FLAMES game predicts love! Remember, real feelings matter more than a game."
+    },
+    A: {
+        title: "Affection",
+        emoji: "🥰",
+        description: "A sweet prediction of affection, care, and a special connection."
+    },
+    M: {
+        title: "Marriage",
+        emoji: "💍",
+        description: "A playful marriage prediction! Your future depends on your choices, not FLAMES."
+    },
+    E: {
+        title: "Enemies",
+        emoji: "⚡",
+        description: "Plot twist! This is only a game result, not a prediction of a real relationship."
+    },
+    S: {
+        title: "Siblings",
+        emoji: "🫂",
+        description: "A sibling-like bond: fun, teasing, and plenty of memories!"
+    }
+};
+
+document.getElementById("flamesForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const name1 = document.getElementById("yourName").value
+        .toLowerCase().replace(/[^a-z]/g, "");
+    const name2 = document.getElementById("theirName").value
+        .toLowerCase().replace(/[^a-z]/g, "");
+
+    if (!name1 || !name2) {
+        alert("Please enter two valid names using English letters.");
+        return;
+    }
+
+    if (name1 === name2) {
+        alert("Enter two different names to play FLAMES!");
+        return;
+    }
+
+    // Remove matching letters one occurrence at a time.
+    const first = name1.split("");
+    const second = name2.split("");
+
+    for (let i = first.length - 1; i >= 0; i--) {
+        const match = second.indexOf(first[i]);
+
+        if (match !== -1) {
+            first.splice(i, 1);
+            second.splice(match, 1);
+        }
+    }
+
+    const count = first.length + second.length;
+
+    // Handle names with all letters matched.
+    if (count === 0) {
+        showResult("F", true);
+        return;
+    }
+
+    // Standard circular FLAMES elimination.
+    let flames = ["F", "L", "A", "M", "E", "S"];
+    let index = 0;
+
+    while (flames.length > 1) {
+        index = (index + count - 1) % flames.length;
+        flames.splice(index, 1);
+    }
+
+    showResult(flames[0], false);
+});
+
+function showResult(letter, allMatched) {
+    const result = outcomes[letter];
+
+    document.querySelectorAll(".letter").forEach(el => {
+        el.classList.toggle(
+            "active",
+            el.dataset.letter === letter
+        );
+    });
+
+    document.getElementById("resultEmoji").textContent = result.emoji;
+    document.getElementById("resultTitle").textContent = result.title;
+    document.getElementById("resultDescription").textContent =
+        allMatched
+        ? "All letters matched! The usual count is zero, so this version uses Friends as a fallback. Try another pair!"
+        : result.description;
+
+    document.getElementById("result").style.display = "block";
+    document.getElementById("result").scrollIntoView({
+        behavior: "smooth",
+        block: "nearest"
+    });
+}
+
+document.getElementById("resetButton").addEventListener("click", () => {
+    document.getElementById("flamesForm").reset();
+    document.getElementById("result").style.display = "none";
+
+    document.querySelectorAll(".letter").forEach(el => {
+        el.classList.remove("active");
+    });
+
+    document.getElementById("yourName").focus();
+});
+</script>
+
+</body>
+</html>
